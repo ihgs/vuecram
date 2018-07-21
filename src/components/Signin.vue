@@ -1,9 +1,17 @@
 <template>
   <div class="signin">
     <h2>Sign in</h2>
-    <input type="text" v-model="username">
-    <input type="password" v-model="password">
-    <button @click="signIn">Signin</button>
+    <b-container>
+    <b-form>
+      <b-form-group id="username" label="Username">
+        <b-input type="text" v-model="username"></b-input>
+      </b-form-group>
+      <b-form-group id="password" label="Password">
+        <b-input type="password" v-model="password"></b-input>
+      </b-form-group>
+      <b-button @click="signIn">Signin</b-button>
+    </b-form>
+    </b-container>
   </div>
 </template>
 
@@ -23,7 +31,6 @@ export default {
     signIn: function () {
       firebase.auth().signInWithEmailAndPassword(this.username, this.password).then(
         user => {
-          alert('Success!')
           this.$router.push('/')
         },
         err => {

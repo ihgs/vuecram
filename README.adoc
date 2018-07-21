@@ -1,0 +1,24 @@
+= 塾システムv2
+
+
+== 利用システム
+
+* firebase
+
+== 開発
+
+. firebase にプロジェクト作成
+. `Webアプリにfirebaseを追加`　で認証情報を `src/conf.js` に保存
++
+[source]
+----
+export default {
+  apiKey: 'xxxxxxxxxxx',
+  authDomain: 'xxxxxxxxx',
+  databaseURL: 'xxxxxxxxxx',
+  projectId: 'xxxxxxxxxx',
+  storageBucket: 'xxxxxxxxx',
+  messagingSenderId: 'xxxxxxxxxx'
+}
+----
+

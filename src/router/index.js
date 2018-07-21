@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import HelloWorld from '@/components/HelloWorld'
+import Home from '@/components/Home'
 import Signin from '@/components/SignIn'
+import Students from '@/components/students'
 
 Vue.use(Router)
 
@@ -11,9 +12,12 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      meta: { requiresAuth: true }
+      name: 'Home',
+      component: Home,
+      meta: { requiresAuth: true },
+      children: [
+        Students
+      ]
     },
     {
       path: '/signin',
