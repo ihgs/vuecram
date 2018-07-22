@@ -6,13 +6,17 @@ import router from './router'
 import firebase from 'firebase/app'
 import config from './conf'
 import BootstrapVue from 'bootstrap-vue'
+import VueFormGenerator from 'vue-form-generator'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import ModuleLibrary from 'vfg-field-array'
 
 Vue.config.productionTip = false
 firebase.initializeApp(config)
 
 Vue.use(BootstrapVue)
+Vue.use(VueFormGenerator)
+Vue.use(ModuleLibrary)
 
 /* eslint-disable no-new */
 new Vue({
