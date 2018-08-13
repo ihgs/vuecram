@@ -1,6 +1,6 @@
 <template>
   <div>
-    Create Student
+    Edit Student
     <b-form>
       <b-card title="Base">
         <vue-form-generator :schema="nameSchema" :model="student.base" :options="formOptions"></vue-form-generator>
@@ -11,7 +11,7 @@
       <b-card>
         <vue-form-generator :schema="schoolSchema" :model="student.school" :options="formOptions"></vue-form-generator>
       </b-card>
-      <b-btn @click="save">Save</b-btn>
+      <b-btn @click="update">Update</b-btn>
     </b-form>
   </div>
 </template>
@@ -32,6 +32,11 @@ export default {
         }
       })
       this.schoolSchema = schema.school
+
+      const id = this.$route.params.id
+      firebase.database().ref('/students/' + id).once('value').then((snapshot) => {
+        this.student = snapshot.val()
+      })
     })
   },
   data: function () {
@@ -66,9 +71,10 @@ export default {
     }
   },
   methods: {
-    save: function () {
-      firebase.database().ref('students/').push(this.student)
-      alert('sucess')
+    update: function () {
+      const updates = {}
+      updates[ '/students/' + this.$route.params.id ] = this.student
+      firebase.database().ref().update(updates)
     }
   }
 }

@@ -7,7 +7,7 @@
         <b-input type="text" v-model="username"></b-input>
       </b-form-group>
       <b-form-group id="password" label="Password">
-        <b-input type="password" v-model="password"></b-input>
+        <b-input type="password" v-model="password" @keyup.enter.native="signIn"></b-input>
       </b-form-group>
       <b-button @click="signIn">Signin</b-button>
     </b-form>

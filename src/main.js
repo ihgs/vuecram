@@ -9,6 +9,7 @@ import BootstrapVue from 'bootstrap-vue'
 import VueFormGenerator from 'vue-form-generator'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-form-generator/dist/vfg.css'
 import ModuleLibrary from 'vfg-field-array'
 
 Vue.config.productionTip = false

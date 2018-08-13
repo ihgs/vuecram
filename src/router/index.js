@@ -5,6 +5,7 @@ import 'firebase/auth'
 import Home from '@/components/Home'
 import Signin from '@/components/SignIn'
 import Students from '@/components/students'
+import Schools from '@/components/schools'
 
 Vue.use(Router)
 
@@ -16,7 +17,8 @@ let router = new Router({
       component: Home,
       // meta: { requiresAuth: true },
       children: [
-        Students
+        Students,
+        Schools
       ]
     },
     {

@@ -2,31 +2,31 @@ import List from './List'
 import Create from './Create'
 import Edit from './Edit'
 
-const Student = {
+const School = {
   template: `
-    <div class="student">
+    <div class="school">
       <router-view></router-view>
     </div>
   `
 }
 
 export default {
-  path: '/student',
-  component: Student,
+  path: '/school',
+  component: School,
   children: [
     {
       path: '',
-      name: 'StudentList',
+      name: 'SchoolList',
       component: List
     },
     {
       path: 'new',
-      name: 'StudnetCreate',
+      name: 'SchoolCreate',
       component: Create
     },
     {
       path: ':id/edit',
-      name: 'StudentEdit',
+      name: 'SchoolEdit',
       component: Edit
     }
   ]

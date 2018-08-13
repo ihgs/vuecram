@@ -1,16 +1,22 @@
-const person = {
+import VueFormGenerator from 'vue-form-generator'
+const validators = VueFormGenerator.validators
+const base = {
   fields: [
     {
       type: 'input',
       inputType: 'text',
       label: 'Family Name',
-      model: 'familyName'
+      model: 'familyName',
+      validator: [validators.string],
+      required: true
     },
     {
       type: 'input',
       inputType: 'text',
       label: 'First Name',
-      model: 'firstName'
+      model: 'firstName',
+      validator: [validators.string],
+      required: true
     },
     {
       type: 'input',
@@ -26,9 +32,12 @@ const person = {
     },
     {
       type: 'input',
-      inputType: 'date',
+      inputType: 'text',
       label: 'Birthday',
-      model: 'birthday'
+      model: 'birthday',
+      validator: [ validators.regexp ],
+      pattern: '\\d{4}-\\d{1,2}-\\d{1,2}',
+      hint: '入力形式: 2018-01-01'
     }
   ]
 }
@@ -42,10 +51,10 @@ const card = {
       model: 'mail'
     },
     {
-      type: 'array',
+      type: 'input',
+      inputType: 'text',
       label: 'Card ID',
-      model: 'cardIds',
-      showRemoveButton: true
+      model: 'cardId'
     }
   ]
 }
@@ -53,11 +62,26 @@ const card = {
 const school = {
   fields: [
     {
-      type: 'input',
-      inputType: 'text',
+      type: 'select',
       label: 'School',
-      model: 'schoolId'
+      model: 'id'
+    },
+    {
+      type: 'input',
+      inputType: 'number',
+      placeholder: '入学年度',
+      model: 'enteranceYear'
+    },
+    {
+      type: 'textArea',
+      placeholder: 'memo',
+      model: 'memo'
+    },
+    {
+      type: 'checkbox',
+      label: '卒業',
+      model: 'graduated'
     }
   ]
 }
-export default { person, card, school }
+export default { base, card, school }
