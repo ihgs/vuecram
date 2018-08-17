@@ -34,6 +34,9 @@ export default {
   mounted: function () {
     firebase.database().ref('schools').once('value').then((data) => {
       const obj = data.val()
+      if (!obj) {
+        return
+      }
       this.items = Object.keys(obj).map(function (key) {
         obj[key].id = key
         return obj[key]

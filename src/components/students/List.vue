@@ -43,6 +43,9 @@ export default {
       firebase.database().ref('students').once('value').then((studentSp) => {
         this.schoolMap = schoolSp.val()
         const obj = studentSp.val()
+        if (!obj) {
+          return
+        }
         this.items = Object.keys(obj).map((key) => {
           obj[key].id = key
           return {
@@ -53,7 +56,7 @@ export default {
             _details: [
               {
                 birthday: obj[key].base ? obj[key].base.birthday : '',
-                cardId: obj[key].card ? obj[key].card.id : '',
+                cardId: obj[key].card ? obj[key].card.cardId : '',
                 mail: obj[key].card ? obj[key].card.mail : ''
               }
             ]
@@ -86,7 +89,7 @@ export default {
       return ''
     },
     school: function (student) {
-      if (student.school) {
+      if (student.school && student.school.id) {
         const school = this.schoolMap[student.school.id]
         if (school) {
           let res = school.base.name + school.base.kind

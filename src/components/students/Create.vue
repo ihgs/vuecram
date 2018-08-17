@@ -25,6 +25,11 @@ export default {
   created: function () {
     firebase.database().ref('schools').once('value').then((data) => {
       const obj = data.val()
+      if (!obj) {
+        schema.school.fields[0].values = []
+        this.schoolSchema = schema.school
+        return
+      }
       schema.school.fields[0].values = Object.keys(obj).map(function (key) {
         return {
           id: key,
@@ -50,7 +55,7 @@ export default {
         },
         card: {
           mail: '',
-          cardIds: ['']
+          cardId: ''
         },
         school:
         {
