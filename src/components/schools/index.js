@@ -11,7 +11,7 @@ const School = {
 }
 
 export default {
-  path: '/school',
+  path: '/schools',
   component: School,
   children: [
     {

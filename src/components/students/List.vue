@@ -1,19 +1,20 @@
 <template>
   <div>
+    <flash-message variant="success"></flash-message>
     <b-container>
       <b-row align-h="between">
         <b-col cols="5">
           <b-input v-model="filter"></b-input>
         </b-col>
         <b-col cols="2">
-          <b-btn variant="primary" to="/student/new">New</b-btn>
+          <b-btn variant="primary" to="/students/new">New</b-btn>
         </b-col>
       </b-row>
       <b-table :items="items" :fields="fields" :filter="filter">
         <template slot="action" slot-scope="row">
           <b-btn-group>
             <b-btn @click.stop="row.toggleDetails">{{row.detailsShowing ? 'Hide' : 'Show'}} Detail</b-btn>
-            <b-btn variant="warning" :to="'student/'+row.item.id+'/edit'">Edit</b-btn>
+            <b-btn variant="warning" :to="'students/'+row.item.id+'/edit'">Edit</b-btn>
             <b-btn variant="danger" @click="deleteStudent(row.item.id)">Delete</b-btn>
           </b-btn-group>
         </template>

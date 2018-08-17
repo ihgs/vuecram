@@ -75,6 +75,9 @@ export default {
       const updates = {}
       updates[ '/students/' + this.$route.params.id ] = this.student
       firebase.database().ref().update(updates)
+      this.student = {}
+      this.flash({ message: 'Success', variant: 'success' })
+      this.$router.push('/students')
     }
   }
 }

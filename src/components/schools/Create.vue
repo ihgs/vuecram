@@ -37,7 +37,8 @@ export default {
     save: function () {
       firebase.database().ref('schools/').push(this.school)
       this.school.base = {}
-      this.showSuccess = true
+      this.flash({ message: 'Success', variant: 'success' })
+      this.$router.push('/schools')
     },
     onValidated (isValid, errors) {
       this.invalid = !isValid

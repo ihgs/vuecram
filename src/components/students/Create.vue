@@ -68,7 +68,9 @@ export default {
   methods: {
     save: function () {
       firebase.database().ref('students/').push(this.student)
-      alert('sucess')
+      this.student = {}
+      this.flash({ message: 'Success', variant: 'success' })
+      this.$router.push('/students')
     }
   }
 }

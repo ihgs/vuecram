@@ -1,7 +1,6 @@
 <template>
   <div>
     Edit school
-    <b-alert variant="success" :show="showSuccess">Success</b-alert>
     <b-form>
       <b-card>
         <vue-form-generator :schema="schoolSchema" :model="school.base" :options="formOptions" @validated="onValidated"></vue-form-generator>
@@ -32,7 +31,6 @@ export default {
         validateAfterLoad: true,
         validateAfterChanged: true
       },
-      showSuccess: false,
       invalid: false
     }
   },
@@ -42,7 +40,8 @@ export default {
       updates[ '/schools/' + this.$route.params.id ] = this.school
       firebase.database().ref().update(updates)
       this.school.base = {}
-      this.showSuccess = true
+      this.flash({ message: 'Success', variant: 'success' })
+      this.$router.push('/schools')
     },
     onValidated (isValid, errors) {
       this.invalid = !isValid

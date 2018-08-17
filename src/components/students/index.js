@@ -11,7 +11,7 @@ const Student = {
 }
 
 export default {
-  path: '/student',
+  path: '/students',
   component: Student,
   children: [
     {
