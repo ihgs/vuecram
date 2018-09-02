@@ -1,6 +1,7 @@
 import List from './List'
 import Create from './Create'
 import Edit from './Edit'
+import Timestamp from './Timestamp'
 
 const Student = {
   template: `
@@ -28,6 +29,11 @@ export default {
       path: ':id/edit',
       name: 'StudentEdit',
       component: Edit
+    },
+    {
+      path: ':id/timestamp',
+      name: 'Timestamp',
+      component: Timestamp
     }
   ]
 }

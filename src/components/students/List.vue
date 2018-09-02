@@ -14,6 +14,7 @@
         <template slot="action" slot-scope="row">
           <b-btn-group>
             <b-btn @click.stop="row.toggleDetails">{{row.detailsShowing ? 'Hide' : 'Show'}} Detail</b-btn>
+            <b-btn variant="info" :to="'students/'+row.item.id+'/timestamp'">Timestamp</b-btn>
             <b-btn variant="warning" :to="'students/'+row.item.id+'/edit'">Edit</b-btn>
             <b-btn variant="danger" @click="deleteStudent(row.item.id)">Delete</b-btn>
           </b-btn-group>

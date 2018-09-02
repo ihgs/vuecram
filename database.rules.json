@@ -1,0 +1,14 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "students": {
+      ".indexOn": "card/cardId"
+    },
+    "settings": {
+      "tokens": {
+        ".indexOn": "token"
+      }
+    }
+  }
+}
