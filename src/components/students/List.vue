@@ -32,7 +32,6 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
 import moment from 'moment'
 
 const now = moment()
@@ -40,31 +39,7 @@ const now = moment()
 export default {
   name: 'SchoolList',
   created: function () {
-    firebase.database().ref('schools').once('value').then((schoolSp) => {
-      firebase.database().ref('students').once('value').then((studentSp) => {
-        this.schoolMap = schoolSp.val()
-        const obj = studentSp.val()
-        if (!obj) {
-          return
-        }
-        this.items = Object.keys(obj).map((key) => {
-          obj[key].id = key
-          return {
-            id: key,
-            fullname: this.fullname(obj[key]),
-            age: this.age(obj[key]),
-            school: this.school(obj[key]),
-            _details: [
-              {
-                birthday: obj[key].base ? obj[key].base.birthday : '',
-                cardId: obj[key].card ? obj[key].card.cardId : '',
-                mail: obj[key].card ? obj[key].card.mail : ''
-              }
-            ]
-          }
-        })
-      })
-    })
+    this.reload()
   },
   data: function () {
     return {
@@ -98,15 +73,47 @@ export default {
             return res + ' 卒業'
           }
           if (student.school.enteranceYear) {
-            res = res + ' ' + (now.years() - student.school.enteranceYear) + '年'
+            let hosei = 0
+            if (now.month() + 1 >= 4) {
+              hosei = 1
+            }
+            res = res + ' ' + (now.year() - student.school.enteranceYear + hosei) + '年'
           }
           return res
         }
         return ''
       }
     },
-    deleteStuedent: function (id) {
-      firebase.database().ref('students').child(id).set(null)
+    deleteStudent: function (id) {
+      firebase.firestore().collection('students').doc(id).delete()
+      this.reload()
+    },
+    reload: function () {
+      firebase.firestore().collection('schools').get().then((schoolSp) => {
+        this.schoolMap = {}
+        schoolSp.forEach((schoolDoc) => {
+          this.schoolMap[schoolDoc.id] = schoolDoc.data()
+        })
+        firebase.firestore().collection('students').get().then((studentSp) => {
+          this.items = []
+          studentSp.forEach((studentDoc) => {
+            const studentObj = studentDoc.data()
+            this.items.push({
+              id: studentDoc.id,
+              fullname: this.fullname(studentObj),
+              age: this.age(studentObj),
+              school: this.school(studentObj),
+              _details: [
+                {
+                  birthday: studentObj.base ? studentObj.base.birthday : '',
+                  cardId: studentObj.card ? studentObj.card.cardId : '',
+                  mail: studentObj.card ? studentObj.card.mail : ''
+                }
+              ]
+            })
+          })
+        })
+      })
     }
   }
 }

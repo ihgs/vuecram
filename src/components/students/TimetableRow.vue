@@ -27,7 +27,6 @@ export default {
   props: {
     title: String,
     daydata: Object,
-    timestamps: Array,
     start_hour: {
       type: Number,
       default: 8

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase/app'
+import 'firebase/firestore'
 import config from './conf'
 import BootstrapVue from 'bootstrap-vue'
 import VueFormGenerator from 'vue-form-generator'
@@ -16,6 +17,7 @@ import store from './store'
 
 Vue.config.productionTip = false
 firebase.initializeApp(config)
+firebase.firestore()
 
 Vue.use(BootstrapVue)
 Vue.use(VueFormGenerator)

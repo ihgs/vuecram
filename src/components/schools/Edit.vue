@@ -13,14 +13,13 @@
 <script>
 import schema from './schema'
 import firebase from 'firebase/app'
-import 'firebase/database'
 
 export default {
   name: 'EditSchool',
   created: function () {
     const id = this.$route.params.id
-    firebase.database().ref('/schools/' + id).once('value').then((snapshot) => {
-      this.school = snapshot.val()
+    firebase.firestore().collection('/schools/').doc(id).get().then((snapshot) => {
+      this.school = snapshot.data()
     })
   },
   data: function () {
@@ -36,9 +35,7 @@ export default {
   },
   methods: {
     update: function () {
-      const updates = {}
-      updates[ '/schools/' + this.$route.params.id ] = this.school
-      firebase.database().ref().update(updates)
+      firebase.firestore().collection('schools').doc(this.$route.params.id).update(this.school)
       this.school.base = {}
       this.flash({ message: 'Success', variant: 'success' })
       this.$router.push('/schools')

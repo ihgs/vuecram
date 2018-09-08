@@ -14,7 +14,6 @@
 <script>
 import schema from './schema'
 import firebase from 'firebase/app'
-import 'firebase/database'
 
 export default {
   name: 'SchoolCreate',
@@ -35,9 +34,13 @@ export default {
   },
   methods: {
     save: function () {
-      firebase.database().ref('schools/').push(this.school)
+      firebase.firestore().collection('schools/').add(this.school)
+        .then((docRef) => {
+          this.flash({ message: 'Success', variant: 'success' })
+        }).catch((error) => {
+          this.flash({ message: error, variant: 'error' })
+        })
       this.school.base = {}
-      this.flash({ message: 'Success', variant: 'success' })
       this.$router.push('/schools')
     },
     onValidated (isValid, errors) {

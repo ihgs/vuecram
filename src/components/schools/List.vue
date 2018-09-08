@@ -27,21 +27,11 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
 
 export default {
   name: 'SchoolList',
   mounted: function () {
-    firebase.database().ref('schools').once('value').then((data) => {
-      const obj = data.val()
-      if (!obj) {
-        return
-      }
-      this.items = Object.keys(obj).map(function (key) {
-        obj[key].id = key
-        return obj[key]
-      })
-    })
+    this.reload()
   },
   data: function () {
     return {
@@ -52,7 +42,18 @@ export default {
   },
   methods: {
     deleteSchool: function (id) {
-      firebase.database().ref('schools').child(id).set(null)
+      firebase.firestore().collection('schools').doc(id).delete()
+      this.reload()
+    },
+    reload: function () {
+      firebase.firestore().collection('schools').get().then((snapshot) => {
+        this.items = []
+        snapshot.forEach((doc) => {
+          const obj = doc.data()
+          obj.id = doc.id
+          this.items.push(obj)
+        })
+      })
     }
   }
 }

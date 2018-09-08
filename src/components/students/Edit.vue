@@ -18,24 +18,26 @@
 <script>
 import schema from './schema'
 import firebase from 'firebase/app'
-import 'firebase/database'
 
 export default {
   name: 'StudentCreate',
   created: function () {
-    firebase.database().ref('schools').once('value').then((data) => {
-      const obj = data.val()
-      schema.school.fields[0].values = Object.keys(obj).map(function (key) {
-        return {
-          id: key,
-          name: obj[key].base.name + obj[key].base.kind
-        }
+    firebase.firestore().collection('schools').get().then((schoolSp) => {
+      schema.school.fields[0].values = []
+      schoolSp.forEach((schoolDoc) => {
+        const obj = schoolDoc.data()
+        schema.school.fields[0].values.push(
+          {
+            id: schoolDoc.id,
+            name: obj.base.name + obj.base.kind
+          }
+        )
       })
       this.schoolSchema = schema.school
 
       const id = this.$route.params.id
-      firebase.database().ref('/students/' + id).once('value').then((snapshot) => {
-        this.student = snapshot.val()
+      firebase.firestore().collection('students').doc(id).get().then((snapshot) => {
+        this.student = snapshot.data()
       })
     })
   },
@@ -72,9 +74,7 @@ export default {
   },
   methods: {
     update: function () {
-      const updates = {}
-      updates[ '/students/' + this.$route.params.id ] = this.student
-      firebase.database().ref().update(updates)
+      firebase.firestore().collection('students').doc(this.$route.params.id).update(this.student)
       this.student = {}
       this.flash({ message: 'Success', variant: 'success' })
       this.$router.push('/students')

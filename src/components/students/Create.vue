@@ -18,23 +18,17 @@
 <script>
 import schema from './schema'
 import firebase from 'firebase/app'
-import 'firebase/database'
 
 export default {
   name: 'StudentCreate',
   created: function () {
-    firebase.database().ref('schools').once('value').then((data) => {
-      const obj = data.val()
-      if (!obj) {
-        schema.school.fields[0].values = []
-        this.schoolSchema = schema.school
-        return
-      }
-      schema.school.fields[0].values = Object.keys(obj).map(function (key) {
-        return {
-          id: key,
-          name: obj[key].base.name + obj[key].base.kind
-        }
+    firebase.firestore().collection('schools').get().then((snapshot) => {
+      schema.school.fields[0].values = []
+      snapshot.forEach((doc) => {
+        const obj = doc.data()
+        obj.id = doc.id
+        obj.name = obj.base.name + obj.base.kind
+        schema.school.fields[0].values.push(obj)
       })
       this.schoolSchema = schema.school
     })
@@ -72,9 +66,13 @@ export default {
   },
   methods: {
     save: function () {
-      firebase.database().ref('students/').push(this.student)
+      firebase.firestore().collection('students').add(this.student)
+        .then((docRef) => {
+          this.flash({ message: 'Success', variant: 'success' })
+        }).catch((error) => {
+          this.flash({ message: error, variant: 'error' })
+        })
       this.student = {}
-      this.flash({ message: 'Success', variant: 'success' })
       this.$router.push('/students')
     }
   }
