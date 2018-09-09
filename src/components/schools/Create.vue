@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     save: function () {
-      firebase.firestore().collection('schools/').add(this.school)
+      firebase.firestore().collection('schools').add(this.school)
         .then((docRef) => {
           this.flash({ message: 'Success', variant: 'success' })
         }).catch((error) => {

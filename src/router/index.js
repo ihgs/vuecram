@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import Signin from '@/components/SignIn'
 import Students from '@/components/students'
 import Schools from '@/components/schools'
+import Timestamps from '@/components/timestamps'
 
 Vue.use(Router)
 
@@ -18,7 +19,8 @@ let router = new Router({
       // meta: { requiresAuth: true },
       children: [
         Students,
-        Schools
+        Schools,
+        Timestamps
       ]
     },
     {

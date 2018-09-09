@@ -4,6 +4,7 @@
       <b-nav>
         <b-nav-item to="/students">Student</b-nav-item>
         <b-nav-item to="/schools">School</b-nav-item>
+        <b-nav-item to="/timestamps">Timestamp</b-nav-item>
       </b-nav>
       <router-view></router-view>
     </b-container>

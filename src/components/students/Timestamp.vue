@@ -17,7 +17,6 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
 import TimeTable from './TimeTable'
 
 const moment = require('moment')
@@ -30,8 +29,8 @@ export default {
   },
   mounted: function () {
     this.id = this.$route.params.id
-    firebase.database().ref('/students/' + this.id).once('value').then((snapshot) => {
-      this.student = snapshot.val()
+    firebase.firestore().collection('students').doc(this.id).get().then((snapshot) => {
+      this.student = snapshot.data()
     })
     const today = moment()
     this.targetMonth = today.format('YYYY-MM')
@@ -68,14 +67,12 @@ export default {
       this.year = month.year()
       this.month = month.month() + 1
       this.items = []
-      firebase.database().ref('stamps').child(month.format('YYYY')).child(month.format('MM')).child(this.id).once('value').then((data) => {
-        const obj = data.val()
-        if (!obj) {
-          return
-        }
-        this.items = Object.keys(obj).map(function (key) {
-          obj[key].time = moment(obj[key].timestamp).format('lll')
-          return obj[key]
+      firebase.firestore().collection('stamps').where('student_id', '==', this.id).get().then((stampSp) => {
+        this.items = []
+        stampSp.forEach((stamp) => {
+          const obj = stamp.data()
+          obj.time = moment(obj.timestamp).format('lll')
+          this.items.push(obj)
         })
       })
     }
