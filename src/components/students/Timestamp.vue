@@ -63,18 +63,22 @@ export default {
     }
   },
   methods: {
-    update: function (month) {
-      this.year = month.year()
-      this.month = month.month() + 1
+    update: function (date) {
+      this.year = date.year()
+      this.month = date.month() + 1
       this.items = []
-      firebase.firestore().collection('stamps').where('student_id', '==', this.id).get().then((stampSp) => {
-        this.items = []
-        stampSp.forEach((stamp) => {
-          const obj = stamp.data()
-          obj.time = moment(obj.timestamp).format('lll')
-          this.items.push(obj)
+      firebase.firestore().collection('stamps')
+        .where('timestamp', '>=', date.startOf('month').toDate())
+        .where('timestamp', '<=', date.endOf('month').toDate())
+        .where('student_id', '==', this.id)
+        .get().then((stampSp) => {
+          this.items = []
+          stampSp.forEach((stamp) => {
+            const obj = stamp.data()
+            obj.time = moment(obj.timestamp).format('lll')
+            this.items.push(obj)
+          })
         })
-      })
     }
   }
 }
