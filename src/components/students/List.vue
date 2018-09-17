@@ -13,10 +13,12 @@
       <b-table :items="items" :fields="fields" :filter="filter">
         <template slot="action" slot-scope="row">
           <b-btn-group>
-            <b-btn @click.stop="row.toggleDetails">{{row.detailsShowing ? 'Hide' : 'Show'}} Detail</b-btn>
-            <b-btn variant="info" :to="'students/'+row.item.id+'/timestamp'">Timestamp</b-btn>
-            <b-btn variant="warning" :to="'students/'+row.item.id+'/edit'">Edit</b-btn>
-            <b-btn variant="danger" @click="deleteStudent(row.item.id)">Delete</b-btn>
+            <b-dropdown @click.stop="row.toggleDetails" right split :text="detailText(row.detailsShowing)">
+              <b-dropdown-item :to="'students/'+row.item.id+'/timestamp'">Timestamp</b-dropdown-item>
+              <b-dropdown-item :to="'students/'+row.item.id+'/edit'">Edit</b-dropdown-item>
+              <b-dropdown-divider></b-dropdown-divider>
+              <b-dropdown-item @click="deleteStudent(row.item.id)">Delete</b-dropdown-item>
+            </b-dropdown>
           </b-btn-group>
         </template>
         <template slot="row-details" slot-scope="row">
@@ -44,7 +46,7 @@ export default {
   data: function () {
     return {
       items: [],
-      fields: ['fullname', 'age', 'school', 'action'],
+      fields: ['fullname', 'age', 'school', 'tags', 'action'],
       schoolMap: {},
       detailFields: ['birthday', 'cardId', 'mail'],
       filter: ''
@@ -85,8 +87,13 @@ export default {
       }
     },
     deleteStudent: function (id) {
-      firebase.firestore().collection('students').doc(id).delete()
-      this.reload()
+      if (confirm('削除しますか？')) {
+        firebase.firestore().collection('students').doc(id).delete()
+        this.reload()
+      }
+    },
+    detailText: function (showing) {
+      return (showing ? 'Hide' : 'Show') + 'Detail'
     },
     reload: function () {
       firebase.firestore().collection('schools').get().then((schoolSp) => {
@@ -103,6 +110,7 @@ export default {
               fullname: this.fullname(studentObj),
               age: this.age(studentObj),
               school: this.school(studentObj),
+              tags: studentObj.tags,
               _details: [
                 {
                   birthday: studentObj.base ? studentObj.base.birthday : '',

@@ -11,6 +11,9 @@
       <b-card>
         <vue-form-generator :schema="schoolSchema" :model="student.school" :options="formOptions"></vue-form-generator>
       </b-card>
+      <b-card title="Tag">
+        <input-tag :tags.sync="student.tags" :addTagOnKeys="[13]" placeholder="文字入力後EnterでTagとして認識されます"></input-tag>
+      </b-card>
       <b-btn @click="save">Save</b-btn>
     </b-form>
   </div>
@@ -18,9 +21,13 @@
 <script>
 import schema from './schema'
 import firebase from 'firebase/app'
+import InputTag from 'vue-input-tag'
 
 export default {
   name: 'StudentCreate',
+  components: {
+    'input-tag': InputTag
+  },
   created: function () {
     firebase.firestore().collection('schools').get().then((snapshot) => {
       schema.school.fields[0].values = []
@@ -56,7 +63,8 @@ export default {
           schoolId: null,
           enteranceYear: '',
           note: ''
-        }
+        },
+        tags: []
       },
       formOptions: {
         validateAfterLoad: false,
