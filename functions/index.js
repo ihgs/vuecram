@@ -1,20 +1,12 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-const moment = require('moment')
 const express = require('express')
 
 admin.initializeApp(functions.config().firebase)
-
-const WebError = function (statusCode, message) {
-  Error.captureStackTrace(this, this.constructor)
-  this.name = this.constructor.name
-  this.statusCode = statusCode
-  this.message = message
-}
+const firestore = admin.firestore()
 
 const isValidToken = function (token) {
-  const db = admin.database()
-  return db.ref('settings/tokens').orderByChild('token').equalTo(token).once('value')
+  return firestore.collection('settings.token').doc(token).get()
 }
 
 /**
@@ -28,46 +20,74 @@ const isValidToken = function (token) {
  * }
  */
 const stamp = function (request, response) {
-  isValidToken(request.get('ACCESS_TOKEN')).then(function(valid) {
-    try{
-      if (valid.numChildren() !== 1) {
-        throw new WebError(403, 'Invalid token')
-      }
-      const cardId = request.body.card_id
-      const deviceName = request.body.device_name
-
-      const db = admin.database()
-      db.ref('students').orderByChild('card/cardId').equalTo(cardId).once('value', function (snapshot) {
-        if (snapshot.numChildren() === 1) {
-          snapshot.forEach(function (data) {
-            const targetMonth = moment().format('YYYY/MM')
-            const userId = data.key
-            const stampsRef = db.ref('stamps/' + targetMonth + '/' + userId)
-            stampsRef.push({
-              timestamp: admin.database.ServerValue.TIMESTAMP,
-              device_name: deviceName
-            })
-              .then(ss => {
-                response.status(201).send(ss)
-              })
-              .catch(error => {
-                throw new WebError(500, error)
-              })
-          })
-        } else if (snapshot.numChildren() === 0) {
-          throw new WebError(404, 'No data')
-        } else {
-          throw new WebError(500, 'duplicate card id')
+  isValidToken(request.get('ACCESS_TOKEN')).then(function (valid) {
+    if (!valid.exists) {
+      response.status(403).send(
+        {
+          status: 'error',
+          message: 'This reader is not registered'
         }
-      })
-    } catch (e) {
-      if (e instanceof WebError) {
-        response.status(e.statusCode).send({error: e.message})
-      } else {
-        response.status(500).send(e)
-      }
+      )
+      return
     }
+    const cardId = request.body.card_id
+    const deviceName = request.body.device_name
+    firestore.collection('students').where('card.cardId', '==', cardId).get()
+      .then(snapshot => {
+        if (snapshot._size === 0) {
+          response.status(404).send(
+            {
+              status: 'error',
+              message: `This card(${cardId}) is not registered.`
+            }
+          )
+          return
+        }
+        snapshot.forEach(function (data) {
+          const userId = data.id
+          const student = data.data()
+          const name = `${student.base.familyName} ${student.base.firstName}`
+          const stamp = {
+            'device_name': deviceName,
+            'timestamp': new Date(),
+            'student_id': userId
+          }
+          firestore.collection('stamps').add(stamp)
+            .then(ss => {
+              response.status(201).send(
+                {
+                  status: 'success',
+                  name: name
+                }
+              )
+            })
+            .catch(onRejected => {
+              console.log(onRejected)
+              response.status(500).send(
+                {
+                  status: 'error'
+                }
+              )
+            })
+        })
+      })
+      .catch(onRejected => {
+        console.log(onRejected)
+        response.status(500).send(
+          {
+            status: 'error'
+          }
+        )
+      })
   })
+    .catch(function (onRejected) {
+      console.log(onRejected)
+      response.status(500).send(
+        {
+          status: 'error'
+        }
+      )
+    })
 }
 
 const app = express()
