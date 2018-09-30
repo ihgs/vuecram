@@ -1,6 +1,7 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const express = require('express')
+const mail = require('./mail')
 
 admin.initializeApp(functions.config().firebase)
 const firestore = admin.firestore()
@@ -51,6 +52,10 @@ const stamp = function (request, response) {
             'device_name': deviceName,
             'timestamp': new Date(),
             'student_id': userId
+          }
+          const tomail = student.card.mail
+          if (tomail) {
+            mail.sendMail(tomail)
           }
           firestore.collection('stamps').add(stamp)
             .then(ss => {
