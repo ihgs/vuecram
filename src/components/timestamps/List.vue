@@ -1,8 +1,14 @@
 <template>
   <div>
-    <b-form-input type="date" v-model="displayDate"></b-form-input>
-    <time-table :items="items"></time-table>
     <b-container>
+      <b-row>
+        <b-form-group inline>
+          <b-form-input type="date" v-model="displayDate"></b-form-input>
+        </b-form-group>
+      </b-row>
+      <b-row>
+        <time-table :items="items"></time-table>
+      </b-row>
       <b-row>
         <b-btn v-b-modal.modal1 size="sm" class="timestampBtn">Timestamp</b-btn>
       </b-row>

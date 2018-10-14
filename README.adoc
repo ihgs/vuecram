@@ -27,11 +27,19 @@ export default {
 === How to use
 
 
-firebase realtime db に以下のデータを作成
+==== tokenの設定
+
+firebase firestore db に以下のデータを作成
+
+
+* collection: settings.token
+* document
+   * name: token
+
+ドキュメントの値を、curl でACCESS_TOKENで指定します
+
+==== メールサバーへログイン情報を設定する
 
 ```
-settings/tokens/(tokenid)/token=[value]
+firebase functions:config:set gmail.email="myusername@gmail.com" gmail.password="secretpassword"
 ```
-
-valueで設定した値を、curl でACCESS_TOKENで指定します
-
