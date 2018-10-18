@@ -3,11 +3,11 @@ const nodemailer = require('nodemailer')
 const gmailEmail = functions.config().gmail.email
 const gmailPassword = functions.config().gmail.password
 const mailTransport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: gmailEmail,
-        pass: gmailPassword
-    }
+  service: 'gmail',
+  auth: {
+    user: gmailEmail,
+    pass: gmailPassword
+  }
 })
 
 const sendMail = function (to) {
@@ -18,10 +18,10 @@ const sendMail = function (to) {
     text: 'This is a test message from vue.'
   }
   mailTransport.sendMail(email, (err, info) => {
-      if (err) {
-          return console.log(err)
-      }
-      return console.log('success')
+    if (err) {
+      return console.log(err)
+    }
+    return console.log('success')
   })
 }
 

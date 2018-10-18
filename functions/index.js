@@ -29,6 +29,7 @@ const stamp = function (request, response) {
           message: 'This reader is not registered'
         }
       )
+      console.log('This reader is not registered')
       return
     }
     const cardId = request.body.card_id
@@ -42,6 +43,7 @@ const stamp = function (request, response) {
               message: `This card(${cardId}) is not registered.`
             }
           )
+          console.log(`This card(${cardId}) is not registered.`)
           return
         }
         snapshot.forEach(function (data) {
