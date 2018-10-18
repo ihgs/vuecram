@@ -16,7 +16,7 @@ let router = new Router({
       path: '/',
       name: 'Home',
       component: Home,
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
       children: [
         Students,
         Schools,
