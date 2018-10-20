@@ -1,0 +1,17 @@
+{
+  "indexes": [
+    {
+      "collectionId": "stamps",
+      "fields": [
+        {
+          "fieldPath": "student_id",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "mode": "ASCENDING"
+        }
+      ]
+    }
+  ]
+}
