@@ -10,18 +10,20 @@ const mailTransport = nodemailer.createTransport({
   }
 })
 
-const sendMail = function (to) {
+const sendMail = function (to, subject, body) {
   let email = {
     from: gmailEmail,
     to: to,
-    subject: 'test message',
-    text: 'This is a test message from vue.'
+    subject: subject,
+    text: body
   }
   mailTransport.sendMail(email, (err, info) => {
     if (err) {
-      return console.log(err)
+      console.log(err)
+      return 
     }
-    return console.log('success')
+    console.log('Send mail success')
+    return
   })
 }
 

@@ -55,12 +55,12 @@ const stamp = function (request, response) {
             'timestamp': new Date(),
             'student_id': userId
           }
-          const tomail = student.card.mail
-          if (tomail) {
-            mail.sendMail(tomail)
-          }
           firestore.collection('stamps').add(stamp)
             .then(ss => {
+              const tomail = student.card.mail
+              if (tomail) {
+                mail.sendMail(tomail)
+              }
               response.status(201).send(
                 {
                   status: 'success',
