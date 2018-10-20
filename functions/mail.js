@@ -20,10 +20,9 @@ const sendMail = function (to, subject, body) {
   mailTransport.sendMail(email, (err, info) => {
     if (err) {
       console.log(err)
-      return 
+      return
     }
     console.log('Send mail success')
-    return
   })
 }
 
