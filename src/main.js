@@ -17,7 +17,9 @@ import store from './store'
 
 Vue.config.productionTip = false
 firebase.initializeApp(config)
-firebase.firestore()
+const firestore = firebase.firestore()
+const settings = { timestampsInSnapshots: true }
+firestore.settings(settings)
 
 Vue.use(BootstrapVue)
 Vue.use(VueFormGenerator)
