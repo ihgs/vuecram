@@ -59,7 +59,10 @@ const stamp = function (request, response) {
             .then(ss => {
               const tomail = student.card.mail
               if (tomail) {
-                mail.sendMail(tomail)
+                firestore.collection('settings').doc('mail').get().then(mailss => {
+                  const mailInfo = mailss.data()
+                  mail.sendMail(tomail, mailInfo.subject, mailInfo.body)
+                })
               }
               response.status(201).send(
                 {
