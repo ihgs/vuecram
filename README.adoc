@@ -1,5 +1,7 @@
 = 塾システムv2
 
+image:https://badges.greenkeeper.io/ihgs/vuecram.svg[link="https://greenkeeper.io/"]
+
 
 == 利用システム
 
