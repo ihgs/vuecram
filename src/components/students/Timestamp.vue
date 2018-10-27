@@ -75,7 +75,7 @@ export default {
           this.items = []
           stampSp.forEach((stamp) => {
             const obj = stamp.data()
-            obj.time = moment(obj.timestamp).format('lll')
+            obj.time = moment(obj.timestamp.toDate()).format('lll')
             this.items.push(obj)
           })
         })
