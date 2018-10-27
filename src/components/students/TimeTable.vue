@@ -51,7 +51,7 @@ export default {
       do {
         const eventPoints = []
         tmpStamps.forEach((item, index, object) => {
-          const point = moment(item.timestamp)
+          const point = moment(item.timestamp.toDate())
           if (targetMonth.date() === point.date()) {
             const style = (point.hour() - this.start_hour) * this.hour_width
             eventPoints.push(

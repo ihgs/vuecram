@@ -48,7 +48,7 @@ export default {
       this.items.forEach(function (item) {
         const eventPoints = []
         item.timestamps.forEach(function (timestamp) {
-          const point = moment(timestamp.timestamp)
+          const point = moment(timestamp.timestamp.toDate())
           const style = (point.hour() - that.start_hour) * that.hour_width
           eventPoints.push(
             {
