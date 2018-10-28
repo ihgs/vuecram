@@ -19,3 +19,5 @@ selenium-debug.log
 
 src/conf.js
 .runtimeconfig.json
+
+.firebaserc
