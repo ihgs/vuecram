@@ -1,6 +1,8 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const express = require('express')
+const moment = require('moment-timezone')
+moment.tz.setDefault('Asia/Tokyo')
 const mail = require('./mail')
 
 admin.initializeApp(functions.config().firebase)
@@ -50,19 +52,18 @@ const stamp = function (request, response) {
           const userId = data.id
           const student = data.data()
           const name = `${student.base.familyName} ${student.base.firstName}`
+          const timestamp = new Date()
           const stamp = {
             'device_name': deviceName,
-            'timestamp': new Date(),
+            'timestamp': timestamp,
             'student_id': userId
           }
           firestore.collection('stamps').add(stamp)
             .then(ss => {
               const tomail = student.card.mail
               if (tomail) {
-                firestore.collection('settings').doc('mail').get().then(mailss => {
-                  const mailInfo = mailss.data()
-                  mail.sendMail(tomail, mailInfo.subject, mailInfo.body)
-                })
+                const timestr = moment(timestamp).format('HH:mm')
+                mail.sendMail(tomail, name, timestr)
               }
               response.status(201).send(
                 {
