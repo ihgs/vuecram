@@ -42,4 +42,7 @@ firebase firestore db に以下のデータを作成
 
 ```
 firebase functions:config:set gmail.email="myusername@gmail.com" gmail.password="secretpassword"
+firebase functions:config:set mail.subject="入退室のお知らせ。" mail.body="%sさんが%sに打刻しました。（入室、もしくは退室しました）"
 ```
+
+今はmail.bodyの名前の時刻の順番は入れ変えられない
