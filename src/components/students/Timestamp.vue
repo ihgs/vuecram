@@ -10,7 +10,13 @@
     </b-row>
     <b-row>
       <time-table :year="year" :month="month" :timestamps="items"></time-table>
-      <b-table :items="items" :fields="fields"></b-table>
+    </b-row>
+    <b-row>
+      <b-button v-on:click="exportToCsv()" size="sm">Download CSV</b-button>
+    </b-row>
+    <b-row>
+      <b-table :items="items" :fields="fields">
+      </b-table>
     </b-row>
   </b-container>
 </template>
@@ -47,7 +53,7 @@ export default {
       if (this.student && this.student.base) {
         return this.student.base.familyName + ' ' + this.student.base.firstName
       }
-      return ''
+      return '_'
     }
   },
   data: function () {
@@ -79,6 +85,28 @@ export default {
             this.items.push(obj)
           })
         })
+    },
+    exportToCsv: function () {
+      let csvFile = ''
+      this.items.forEach((item) => {
+        csvFile += item.time + '\n'
+      })
+      const filename = this.fullname + '.csv'
+      const blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(blob, filename)
+      } else {
+        const link = document.createElement('a')
+        if (link.download !== undefined) {
+          var url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', filename)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
     }
   }
 }
