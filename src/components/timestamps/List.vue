@@ -7,7 +7,12 @@
         </b-form-group>
       </b-row>
       <b-row>
-        <time-table :items="items"></time-table>
+        <b-form-group>
+          <input-tag :tags.sync="searchTags" :addTagOnKeys="[13]" placeholder="Filter by tag"></input-tag>
+        </b-form-group>
+      </b-row>
+      <b-row>
+        <time-table :items="filterdItems"></time-table>
       </b-row>
       <b-row>
         <b-btn v-b-modal.modal1 size="sm" class="timestampBtn">Timestamp</b-btn>
@@ -34,6 +39,7 @@
 import firebase from 'firebase/app'
 import TimeTable from './TimeTable'
 import vSelect from 'vue-select'
+import InputTag from 'vue-input-tag'
 
 const moment = require('moment')
 moment.locale('ja')
@@ -42,7 +48,8 @@ export default {
   name: 'TimestampList',
   components: {
     TimeTable,
-    vSelect
+    vSelect,
+    InputTag
   },
   created: function () {
     firebase.firestore().collection('students').get().then((studentSp) => {
@@ -107,7 +114,23 @@ export default {
             }
           })
           this.items = Object.values(this.studentMap)
+          this.filterByTags()
         })
+    },
+    filterByTags: function () {
+      if (this.searchTags.length > 0) {
+        this.filterdItems = this.items.filter((studentTs) => {
+          let allinclude = true
+          this.searchTags.forEach((tag) => {
+            if (studentTs.student.tags === undefined || !studentTs.student.tags.includes(tag)) {
+              allinclude = false
+            }
+          })
+          return allinclude
+        })
+      } else {
+        this.filterdItems = this.items
+      }
     },
     fullname: function (student) {
       if (student && student.base) {
@@ -137,7 +160,13 @@ export default {
   },
   watch: {
     'displayDate': function (value) {
-      this.update(moment(value, 'YYYY-MM-DD'))
+      const date = moment(value, 'YYYY-MM-DD')
+      if (date.isValid()) {
+        this.update(date)
+      }
+    },
+    'searchTags': function () {
+      this.filterByTags()
     }
   },
   data: function () {
@@ -145,6 +174,7 @@ export default {
       displayDate: null,
       studentMap: {},
       items: [],
+      filterdItems: [],
       timestamp: {
         year: 2000,
         month: 1,
@@ -159,7 +189,8 @@ export default {
         hour: [],
         minute: []
       },
-      selected_student: null
+      selected_student: null,
+      searchTags: []
     }
   }
 }
