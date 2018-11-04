@@ -23,6 +23,7 @@
     "vue-form-generator": "^2.2.2",
     "vue-input-tag": "^1.0.6",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.5.1",
     "vuex": "^3.0.1",
     "vuex-flash": "^1.0.0"
   },

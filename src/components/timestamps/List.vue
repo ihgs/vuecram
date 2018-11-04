@@ -14,8 +14,8 @@
       </b-row>
     </b-container>
     <b-modal id="modal1" title="Timestamp manually" @shown="updateTime" @ok="handleOk">
-        <b-form-select v-model="selected_student" :options="options.student">
-        </b-form-select>
+        <v-select v-model="selected_student" label="text" :options="options.student">
+        </v-select>
       <b-form inline>
         <b-form-group>
           <b-form-select v-model="timestamp.year" :options="options.year"></b-form-select>
@@ -33,13 +33,16 @@
 <script>
 import firebase from 'firebase/app'
 import TimeTable from './TimeTable'
+import vSelect from 'vue-select'
+
 const moment = require('moment')
 moment.locale('ja')
 
 export default {
   name: 'TimestampList',
   components: {
-    TimeTable
+    TimeTable,
+    vSelect
   },
   created: function () {
     firebase.firestore().collection('students').get().then((studentSp) => {
@@ -127,7 +130,7 @@ export default {
       const stamp = {
         'device_name': 'system',
         'timestamp': moment(this.timestamp).toDate(),
-        'student_id': this.selected_student
+        'student_id': this.selected_student.value
       }
       firebase.firestore().collection('stamps').add(stamp)
     }
