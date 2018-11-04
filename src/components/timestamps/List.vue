@@ -99,7 +99,9 @@ export default {
           stampSp.forEach((stamp) => {
             const stampObj = stamp.data()
             stampObj.time = moment(stampObj.timestamp).format('lll')
-            this.studentMap[stampObj.student_id].timestamps.push(stampObj)
+            if (this.studentMap[stampObj.student_id] !== undefined) {
+              this.studentMap[stampObj.student_id].timestamps.push(stampObj)
+            }
           })
           this.items = Object.values(this.studentMap)
         })
@@ -119,6 +121,9 @@ export default {
       this.timestamp.minute = now.minute()
     },
     handleOk: function () {
+      if (this.selected_student === null) {
+        return false
+      }
       const stamp = {
         'device_name': 'system',
         'timestamp': moment(this.timestamp).toDate(),
