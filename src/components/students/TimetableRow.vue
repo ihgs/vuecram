@@ -69,7 +69,7 @@ export default {
     pos_event: function (point) {
       if (point) {
         return {
-          left: point.style + 'px',
+          left: point.style - 4 + 'px', // 4は打刻時間の位置の微調整
           top: '7px'
         }
       }

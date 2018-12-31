@@ -53,7 +53,7 @@ export default {
         tmpStamps.forEach((item, index, object) => {
           const point = moment(item.timestamp.toDate())
           if (targetMonth.date() === point.date()) {
-            const style = (point.hour() - this.start_hour) * this.hour_width
+            const style = (point.hour() + point.minutes() / 60 - this.start_hour) * this.hour_width
             eventPoints.push(
               {
                 title: point.format('HH:mm'),
