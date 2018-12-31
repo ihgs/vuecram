@@ -9,6 +9,7 @@
       <b-row>
         <b-form-group>
           <input-tag :tags.sync="searchTags" :addTagOnKeys="[13]" placeholder="Filter by tag"></input-tag>
+          <b-form-checkbox v-model="showAll">Show all</b-form-checkbox>
         </b-form-group>
       </b-row>
       <b-row>
@@ -114,12 +115,18 @@ export default {
             }
           })
           this.items = Object.values(this.studentMap)
-          this.filterByTags()
+          this.filterByTagsAndConditions()
         })
     },
-    filterByTags: function () {
+    isDisplay: function (student) {
+      return this.showAll || !student.school.graduated
+    },
+    filterByTagsAndConditions: function () {
       if (this.searchTags.length > 0) {
         this.filterdItems = this.items.filter((studentTs) => {
+          if (!this.isDisplay(studentTs.student)) {
+            return false
+          }
           let allinclude = true
           this.searchTags.forEach((tag) => {
             if (studentTs.student.tags === undefined || !studentTs.student.tags.includes(tag)) {
@@ -129,7 +136,9 @@ export default {
           return allinclude
         })
       } else {
-        this.filterdItems = this.items
+        this.filterdItems = this.items.filter((studentTs) => {
+          return this.isDisplay(studentTs.student)
+        })
       }
     },
     fullname: function (student) {
@@ -166,7 +175,10 @@ export default {
       }
     },
     'searchTags': function () {
-      this.filterByTags()
+      this.filterByTagsAndConditions()
+    },
+    'showAll': function () {
+      this.filterByTagsAndConditions()
     }
   },
   data: function () {
@@ -190,7 +202,8 @@ export default {
         minute: []
       },
       selected_student: null,
-      searchTags: []
+      searchTags: [],
+      showAll: false
     }
   }
 }
