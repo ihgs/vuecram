@@ -3,8 +3,11 @@
     <flash-message variant="success"></flash-message>
     <b-container>
       <b-row align-h="between">
-        <b-col cols="5">
-          <b-input v-model="filter"></b-input>
+        <b-col cols="7">
+          <b-form inline>
+            <b-input v-model="filter"></b-input>
+            <b-form-checkbox v-model="showAll">Show all</b-form-checkbox>
+          </b-form>
         </b-col>
         <b-col cols="2">
           <b-btn variant="primary" to="/students/new">New</b-btn>
@@ -49,7 +52,13 @@ export default {
       fields: ['fullname', 'age', 'school', 'tags', 'action'],
       schoolMap: {},
       detailFields: ['birthday', 'cardId', 'mail'],
-      filter: ''
+      filter: '',
+      showAll: false
+    }
+  },
+  watch: {
+    showAll: function () {
+      this.reload()
     }
   },
   methods: {
@@ -105,12 +114,17 @@ export default {
           this.items = []
           studentSp.forEach((studentDoc) => {
             const studentObj = studentDoc.data()
+            // OPTIMIZE it should be filterd when I get data from firestore
+            if (!this.showAll && studentObj.school.graduated) {
+              return
+            }
             this.items.push({
               id: studentDoc.id,
               fullname: this.fullname(studentObj),
               age: this.age(studentObj),
               school: this.school(studentObj),
               tags: studentObj.tags,
+              graduated: studentObj.school.graduated,
               _details: [
                 {
                   birthday: studentObj.base ? studentObj.base.birthday : '',
